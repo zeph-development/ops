@@ -1,0 +1,71 @@
+version: '3.7'
+
+networks:
+  harmony-net:
+
+services:
+  postgres:
+    image: postgres:10
+    networks: 
+      - harmony-net
+    restart: on-failure  
+    ports:
+      - 5432:5432
+    environment:
+      - PGDATA=$HOME/postgresql/data
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    volumes:
+      - $HOME/postgresql/data:/var/lib/postgresql/data
+      - ./sql-script/:/docker-entrypoint-initdb.d/
+  keycloak:
+    image: jboss/keycloak:9.0.0
+    networks: 
+      harmony-net:
+        aliases:
+          - keycloak.net
+    restart: on-failure
+    ports:
+      - 8080:8080
+      - 8443:8443
+    depends_on:
+      - postgres
+    environment:
+      - PROXY_ADDRESS_FORWARDING=true
+      - DB_VENDOR=POSTGRES
+      - DB_ADDR=postgres
+      - DB_DATABASE=postgres
+      - DB_SCHEMA=keycloak
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - KEYCLOAK_USER=$KEYCLOAK_USER
+      - KEYCLOAK_PASSWORD=$KEYCLOAK_PASSWORD
+  harmony-core:
+    image: pancudaniel7/harmony-core:1.0.0
+    networks: 
+      harmony-net:
+        aliases:
+          - harmony-core.net
+    restart: on-failure
+    ports:
+      - 7000:7000
+    depends_on:
+      - keycloak
+    environment:
+      - POSTGRES_CONNECTION_URL=jdbc:postgresql://
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - DATABASE_DDL=update
+      - LOG_LEVEL=TRACE
+      - KEYCLOAK_ENABLE=true
+      - KEYCLOAK_REALM=harmony
+      - KEYCLOAK_AUTH_SERVER=http://keycloak.net:8080/auth/
+      - KEYCLOAK_RESOURCE=harmony-core
+      - KEYCLOAK_SSL_REQUIRED=external
+      - KEYCLOAK_DISABLE_TRUST_MANAGER=true
+      - KEYCLOAK_CLIENT_SECRET=26b211c8-b9ac-4009-acd5-ed1dc9f5dd39
+      - SECURE_ROLE_1=USER
+      - SECURE_URL_1=/api/v1/*

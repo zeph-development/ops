@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  harmony-core:
+      image: pancudaniel7/harmony-core:1.0.0
+      ports:
+        - 7000:7000
+      environment:
+        - POSTGRES_CONNECTION_URL=jdbc:postgresql://
+        - POSTGRES_HOST=postgres
+        - POSTGRES_PORT=5432
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - DATABASE_DDL=update
+        - LOG_LEVEL=DEBUG

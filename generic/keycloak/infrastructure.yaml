@@ -23,8 +23,9 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: Admin@dmin
+      KEYCLOAK_PASSWORD: admin
     ports:
+      - 8443:8443
       - 8080:8080
     depends_on:
       - postgres
