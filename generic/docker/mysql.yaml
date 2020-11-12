@@ -4,8 +4,6 @@ services:
   databases:
     image: mysql:5.7
     container_name: test
-    volumes:
-      - ./sql/sql-db/:/docker-entrypoint-initdb.d/
     ports:
       - "3306:3306"
     environment:
