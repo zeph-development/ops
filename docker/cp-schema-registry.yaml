@@ -1,8 +1,0 @@
-version: '3.7'
-
-services:
-  kafka:
-    image: confluentinc/cp-schema-registry:latest-ubi8
-    hostname: cp-schema-registry
-    ports:
-      - "8081:8081"
