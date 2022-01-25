@@ -11,18 +11,13 @@ sudo snap install codium --classic;
 }
 
 install_diodon() {
-sudo apt install -y diodon;
-cat <<EOT >> ~/.xbindkeys
+sudo apt install -y diodon &&
+cat <<EOT > ~/.xbindkeysrc
 "/usr/bin/diodon"
    Control + grave	
 EOT
-}
-
-install_zsh(){
-sudo apt install -y zsh &&
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" &&
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions &&
-sed 's/plugins=(/plugins=(\nzsh-autosuggestions\n/g' ~/.zshrc > ~/.zshrc;
+killall -s1 xbindkeys &&
+xbindkeys -f ~/.xbindkeysrc
 }
 
 install_github_cli() {
@@ -32,10 +27,7 @@ sudo apt update &&
 sudo apt install gh
 }
 
-
-
 sudo apt update &&
-install_tools &&
-install_zsh
+install_tools
 install_github_cli
 install_diodon
