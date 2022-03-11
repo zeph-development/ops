@@ -3,6 +3,8 @@
 # Developer setup tools script
 
 install_tools () {
+brew install copyclip;
+brew install slack;
 brew install iterm2;
 brew install
 brew install jq;
